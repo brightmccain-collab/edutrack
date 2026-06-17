@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduTrack — The Global School Management System</title>
+<meta name="description" content="EduTrack is the all-in-one school management platform trusted by institutions across 30+ countries to run admissions, fees, results, and communication from one live dashboard.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --ink:#0B1220;
+    --ink-2:#101A30;
+    --ink-3:#16223D;
+    --line: rgba(255,255,255,0.09);
+    --line-soft: rgba(255,255,255,0.05);
+    --paper:#F7F8FC;
+    --paper-2:#FFFFFF;
+    --slate:#8C93A8;
+    --slate-dark:#5B6378;
+    --white:#F7F8FC;
+    --blue:#3D5AFE;
+    --blue-2:#7C5CFF;
+    --amber:#FFB13D;
+    --amber-2:#FF8A3D;
+    --green:#2BD9A0;
+    --max:1180px;
+    --r-sm:10px;
+    --r-md:16px;
+    --r-lg:24px;
+    --shadow-lg: 0 30px 80px -20px rgba(8,12,28,0.45);
+    --shadow-md: 0 14px 40px -12px rgba(8,12,28,0.30);
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; scroll-behavior:auto !important;}
+  }
+
+  a{color:inherit; text-decoration:none;}
+  ul{list-style:none;}
+  img{max-width:100%;display:block;}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+
+  h1,h2,h3,h4{
+    font-family:'Space Grotesk',sans-serif;
+    letter-spacing:-0.01em;
+    line-height:1.05;
+  }
+
+  .mono{
+    font-family:'JetBrains Mono',monospace;
+    letter-spacing:0.02em;
+  }
+
+  .wrap{
+    max-width:var(--max);
+    margin:0 auto;
+    padding:0 28px;
+  }
+
+  :focus-visible{
+    outline:2px solid var(--amber);
+    outline-offset:3px;
+    border-radius:4px;
+  }
+
+  /* ============ BUTTONS ============ */
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    padding:14px 26px;
+    border-radius:999px;
+    font-weight:600;
+    font-size:0.95rem;
+    transition:transform 0.25s cubic-bezier(.2,.8,.2,1), box-shadow .25s, background .25s, color .25s, border-color .25s;
+    white-space:nowrap;
+  }
+  .btn-primary{
+    background:linear-gradient(135deg, var(--amber) 0%, var(--amber-2) 100%);
+    color:#1A1100;
+    box-shadow:0 14px 30px -8px rgba(255,138,61,0.5);
+  }
+  .btn-primary:hover{transform:translateY(-2px); box-shadow:0 18px 36px -8px rgba(255,138,61,0.65);}
+  .btn-ghost{
+    background:rgba(255,255,255,0.06);
+    color:var(--white);
+    border:1px solid var(--line);
+  }
+  .btn-ghost:hover{background:rgba(255,255,255,0.12); transform:translateY(-2px);}
+  .btn-dark{
+    background:var(--ink);
+    color:var(--white);
+  }
+  .btn-dark:hover{transform:translateY(-2px); box-shadow:var(--shadow-md);}
+  .btn-block{width:100%;}
+  .btn svg{flex-shrink:0;}
+
+  /* ============ WHATSAPP FLOATING BUTTON ============ */
+  .wa-float{
+    position:fixed;
+    bottom:24px;
+    right:24px;
+    z-index:90;
+    width:60px;
+    height:60px;
+    border-radius:50%;
+    background:#25D366;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 12px 30px -6px rgba(37,211,102,0.6);
+    animation:pulseWa 2.6s ease-in-out infinite;
+  }
+  .wa-float:hover{transform:scale(1.08);}
+  @keyframes pulseWa{
+    0%,100%{box-shadow:0 12px 30px -6px rgba(37,211,102,0.6);}
+    50%{box-shadow:0 12px 40px -2px rgba(37,211,102,0.85);}
+  }
+
+  /* ============ NAV ============ */
+  header{
+    position:fixed;
+    top:0; left:0; right:0;
+    z-index:80;
+    background:rgba(11,18,32,0.7);
+    backdrop-filter:blur(16px) saturate(140%);
+    border-bottom:1px solid var(--line-soft);
+    transition:background .3s, border-color .3s;
+  }
+  .nav{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    height:76px;
+    color:var(--white);
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;
+    font-size:1.25rem;
+  }
+  .brand-mark{
+    width:34px;height:34px;
+    border-radius:9px;
+    background:linear-gradient(135deg,var(--blue),var(--blue-2));
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 6px 16px -4px rgba(61,90,254,0.6);
+  }
+  .nav-links{
+    display:flex;
+    align-items:center;
+    gap:36px;
+    font-size:0.94rem;
+    color:rgba(247,248,252,0.78);
+  }
+  .nav-links a{transition:color .2s;}
+  .nav-links a:hover{color:var(--white);}
+  .nav-cta{display:flex; align-items:center; gap:14px;}
+  .nav-burger{display:none;}
+
+  /* ============ HERO ============ */
+  .hero{
+    position:relative;
+    background:
+      radial-gradient(900px 500px at 18% -10%, rgba(61,90,254,0.35), transparent 60%),
+      radial-gradient(700px 500px at 100% 10%, rgba(124,92,255,0.25), transparent 55%),
+      linear-gradient(180deg, var(--ink) 0%, var(--ink-2) 60%, var(--ink-3) 100%);
+    color:var(--white);
+    padding:168px 0 0;
+    overflow:hidden;
+  }
+  .hero-grid-bg{
+    position:absolute;
+    inset:0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+    background-size:46px 46px;
+    mask-image:linear-gradient(180deg, rgba(0,0,0,0.9), transparent 75%);
+    pointer-events:none;
+  }
+  .hero-inner{
+    position:relative;
+    z-index:2;
+    display:grid;
+    grid-template-columns:1.05fr 0.95fr;
+    gap:48px;
+    align-items:center;
+    padding-bottom:60px;
+  }
+  .eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:9px;
+    padding:7px 14px 7px 8px;
+    border-radius:999px;
+    background:rgba(255,255,255,0.06);
+    border:1px solid var(--line);
+    font-size:0.8rem;
+    font-weight:500;
+    color:rgba(247,248,252,0.86);
+    margin-bottom:26px;
+  }
+  .eyebrow .dot{
+    width:8px;height:8px;border-radius:50%;
+    background:var(--green);
+    box-shadow:0 0 0 0 rgba(43,217,160,0.6);
+    animation:dotPing 2s infinite;
+  }
+  @keyframes dotPing{
+    0%{box-shadow:0 0 0 0 rgba(43,217,160,0.5);}
+    70%{box-shadow:0 0 0 7px rgba(43,217,160,0);}
+    100%{box-shadow:0 0 0 0 rgba(43,217,160,0);}
+  }
+  .hero h1{
+    font-size:clamp(2.6rem, 4.6vw, 4.1rem);
+    font-weight:700;
+    margin-bottom:22px;
+  }
+  .hero h1 .grad{
+    background:linear-gradient(100deg, var(--blue) 10%, var(--blue-2) 50%, var(--amber) 100%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    -webkit-text-fill-color:transparent;
+  }
+  .hero p.lede{
+    font-size:1.13rem;
+    color:rgba(247,248,252,0.72);
+    max-width:520px;
+    margin-bottom:34px;
+    line-height:1.6;
+  }
+  .hero-ctas{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    flex-wrap:wrap;
+    margin-bottom:46px;
+  }
+  .trust-row{
+    display:flex;
+    align-items:center;
+    gap:22px;
+    flex-wrap:wrap;
+    color:rgba(247,248,252,0.5);
+    font-size:0.82rem;
+  }
+  .trust-row strong{color:var(--white); font-family:'Space Grotesk',sans-serif;}
+
+  /* ===== Hero visual: global ops panel ===== */
+  .ops-panel{
+    position:relative;
+    background:linear-gradient(160deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+    border:1px solid var(--line);
+    border-radius:var(--r-lg);
+    padding:22px;
+    box-shadow:var(--shadow-lg);
+    backdrop-filter:blur(6px);
+  }
+  .ops-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:16px;
+  }
+  .ops-title{
+    font-size:0.78rem;
+    color:rgba(247,248,252,0.55);
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+  }
+  .ops-live{
+    display:flex;align-items:center;gap:6px;
+    font-size:0.72rem;
+    color:var(--green);
+  }
+  .ops-live .pip{width:6px;height:6px;border-radius:50%;background:var(--green); animation:dotPing 2s infinite;}
+
+  .globe-wrap{
+    position:relative;
+    height:230px;
+    border-radius:var(--r-md);
+    overflow:hidden;
+    background:radial-gradient(circle at 50% 40%, rgba(61,90,254,0.18), transparent 70%);
+    margin-bottom:16px;
+  }
+  .globe-wrap svg{width:100%;height:100%;}
+
+  .ops-stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+    margin-bottom:14px;
+  }
+  .ops-stat{
+    background:rgba(255,255,255,0.04);
+    border:1px solid var(--line-soft);
+    border-radius:12px;
+    padding:13px 12px;
+  }
+  .ops-stat .num{
+    font-family:'JetBrains Mono',monospace;
+    font-size:1.32rem;
+    font-weight:600;
+    color:var(--white);
+  }
+  .ops-stat .lab{
+    font-size:0.68rem;
+    color:rgba(247,248,252,0.5);
+    margin-top:2px;
+  }
+  .ops-ticker{
+    background:rgba(0,0,0,0.25);
+    border:1px solid var(--line-soft);
+    border-radius:12px;
+    padding:11px 14px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.76rem;
+    color:rgba(247,248,252,0.65);
+    height:30px;
+    overflow:hidden;
+    position:relative;
+  }
+  .ops-ticker-track{
+    position:absolute;
+    white-space:nowrap;
+    animation:tickerScroll 16s linear infinite;
+  }
+  @keyframes tickerScroll{
+    0%{transform:translateX(0);}
+    100%{transform:translateX(-50%);}
+  }
+  .ops-ticker-track span{margin-right:34px; color:var(--green);}
+  .ops-ticker-track span.amber-tick{color:var(--amber);}
+
+  /* ============ LOGO / CLIENTS STRIP ============ */
+  .strip{
+    background:var(--ink);
+    border-top:1px solid var(--line-soft);
+    padding:34px 0;
+  }
+  .strip-label{
+    color:rgba(247,248,252,0.45);
+    font-size:0.78rem;
+    text-align:center;
+    margin-bottom:22px;
+    letter-spacing:0.05em;
+    text-transform:uppercase;
+  }
+  .logo-row{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:54px;
+    flex-wrap:wrap;
+    opacity:0.85;
+  }
+  .logo-row .lg{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:600;
+    font-size:1.05rem;
+    color:rgba(247,248,252,0.55);
+    display:flex;align-items:center;gap:8px;
+    white-space:nowrap;
+  }
+  .logo-row .lg .flag{font-size:1.1rem;}
+
+  /* ============ SECTION SHELL ============ */
+  section{padding:108px 0;}
+  .section-head{
+    max-width:640px;
+    margin:0 0 56px;
+  }
+  .section-head.center{margin:0 auto 56px; text-align:center;}
+  .tag{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.76rem;
+    color:var(--blue);
+    background:rgba(61,90,254,0.08);
+    border:1px solid rgba(61,90,254,0.18);
+    padding:6px 12px;
+    border-radius:999px;
+    margin-bottom:18px;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+  }
+  .section-head h2{
+    font-size:clamp(1.9rem, 3vw, 2.6rem);
+    margin-bottom:14px;
+    color:var(--ink);
+  }
+  .section-head p{
+    color:var(--slate-dark);
+    font-size:1.05rem;
+    line-height:1.6;
+  }
+
+  /* ============ FEATURES (the system) ============ */
+  .features-bg{background:var(--paper);}
+  .feature-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:22px;
+  }
+  .fcard{
+    background:var(--paper-2);
+    border:1px solid #E7E9F2;
+    border-radius:var(--r-md);
+    padding:30px 26px;
+    transition:transform .3s, box-shadow .3s, border-color .3s;
+  }
+  .fcard:hover{
+    transform:translateY(-5px);
+    box-shadow:var(--shadow-md);
+    border-color:#D7DBEE;
+  }
+  .fcard .ico{
+    width:46px;height:46px;
+    border-radius:12px;
+    display:flex;align-items:center;justify-content:center;
+    margin-bottom:18px;
+  }
+  .fcard h3{
+    font-size:1.18rem;
+    margin-bottom:10px;
+    color:var(--ink);
+  }
+  .fcard p{
+    color:var(--slate-dark);
+    font-size:0.94rem;
+    line-height:1.6;
+  }
+  .ico-blue{background:rgba(61,90,254,0.1); color:var(--blue);}
+  .ico-amber{background:rgba(255,138,61,0.12); color:var(--amber-2);}
+  .ico-green{background:rgba(43,217,160,0.12); color:#1A9E78;}
+
+  /* ============ HOW IT WORKS (real sequence -> numbered) ============ */
+  .flow-bg{
+    background:var(--ink);
+    color:var(--white);
+    position:relative;
+    overflow:hidden;
+  }
+  .flow-bg::before{
+    content:'';
+    position:absolute;
+    top:-200px; right:-200px;
+    width:560px;height:560px;
+    background:radial-gradient(circle, rgba(124,92,255,0.18), transparent 70%);
+  }
+  .flow-grid{
+    position:relative;
+    z-index:2;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:0;
+    margin-top:20px;
+  }
+  .flow-step{
+    padding:0 22px 0 0;
+    position:relative;
+  }
+  .flow-step:not(:last-child)::after{
+    content:'';
+    position:absolute;
+    top:21px; right:0;
+    width:22px;height:1px;
+    background:linear-gradient(90deg, var(--line), transparent);
+    display:none;
+  }
+  .flow-num{
+    font-family:'JetBrains Mono',monospace;
+    color:rgba(255,177,61,0.9);
+    font-size:0.85rem;
+    margin-bottom:14px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .flow-num .ln{flex:1; height:1px; background:var(--line);}
+  .flow-step h4{font-size:1.12rem; margin-bottom:10px; color:var(--white);}
+  .flow-step p{color:rgba(247,248,252,0.6); font-size:0.92rem; line-height:1.6;}
+
+  /* ============ STATS BAND ============ */
+  .stats-band{
+    background:linear-gradient(120deg, var(--blue) 0%, var(--blue-2) 100%);
+    padding:64px 0;
+  }
+  .stats-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+    text-align:center;
+  }
+  .stat-item .n{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:clamp(2rem,3.4vw,2.7rem);
+    font-weight:700;
+    color:var(--white);
+  }
+  .stat-item .l{
+    color:rgba(255,255,255,0.78);
+    font-size:0.9rem;
+    margin-top:6px;
+  }
+
+  /* ============ CLIENTS / TESTIMONIALS ============ */
+  .clients-bg{background:var(--paper);}
+  .client-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:22px;
+  }
+  .ccard{
+    background:var(--paper-2);
+    border:1px solid #E7E9F2;
+    border-radius:var(--r-md);
+    padding:30px;
+    display:flex;
+    flex-direction:column;
+    height:100%;
+  }
+  .ccard .stars{color:var(--amber-2); font-size:0.95rem; margin-bottom:16px; letter-spacing:2px;}
+  .ccard p.quote{
+    font-size:0.98rem;
+    color:var(--ink);
+    line-height:1.65;
+    margin-bottom:22px;
+    flex:1;
+  }
+  .ccard .who{
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .ccard .avatar{
+    width:42px;height:42px;
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:600;
+    color:#fff;
+    font-size:0.95rem;
+  }
+  .ccard .who-name{font-weight:600; font-size:0.92rem; color:var(--ink);}
+  .ccard .who-role{font-size:0.8rem; color:var(--slate-dark);}
+  .map-row{
+    margin-top:50px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:0;
+    flex-wrap:wrap;
+    text-align:center;
+  }
+  .map-pill{
+    display:flex;
+    align-items:center;
+    gap:46px;
+    flex-wrap:wrap;
+    justify-content:center;
+    padding:26px 40px;
+    border:1px dashed #D7DBEE;
+    border-radius:999px;
+  }
+  .map-pill .country{
+    display:flex; align-items:center; gap:8px;
+    font-size:0.92rem; color:var(--slate-dark); font-weight:500;
+  }
+
+  /* ============ PRICING ============ */
+  .pricing-bg{
+    background:linear-gradient(180deg, var(--ink) 0%, #0D1526 100%);
+    color:var(--white);
+    position:relative;
+  }
+  .billing-toggle{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:14px;
+    margin:0 auto 50px;
+  }
+  .toggle-track{
+    width:54px;height:30px;
+    border-radius:999px;
+    background:rgba(255,255,255,0.1);
+    border:1px solid var(--line);
+    position:relative;
+    cursor:pointer;
+    transition:background .25s;
+  }
+  .toggle-track.on{background:var(--blue);}
+  .toggle-knob{
+    position:absolute;
+    top:3px; left:3px;
+    width:22px;height:22px;
+    border-radius:50%;
+    background:#fff;
+    transition:transform .25s cubic-bezier(.2,.8,.2,1);
+  }
+  .toggle-track.on .toggle-knob{transform:translateX(24px);}
+  .toggle-label{font-size:0.92rem; color:rgba(247,248,252,0.7);}
+  .toggle-label.active{color:var(--white); font-weight:600;}
+  .save-chip{
+    background:rgba(43,217,160,0.15);
+    color:var(--green);
+    font-size:0.74rem;
+    font-weight:600;
+    padding:3px 9px;
+    border-radius:999px;
+    margin-left:4px;
+  }
+
+  .pricing-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:22px;
+    align-items:stretch;
+  }
+  .pcard{
+    background:rgba(255,255,255,0.04);
+    border:1px solid var(--line);
+    border-radius:var(--r-lg);
+    padding:34px 28px;
+    display:flex;
+    flex-direction:column;
+    position:relative;
+    transition:transform .3s, border-color .3s;
+  }
+  .pcard:hover{transform:translateY(-6px);}
+  .pcard.feat{
+    background:linear-gradient(160deg, rgba(61,90,254,0.16), rgba(124,92,255,0.08));
+    border-color:rgba(124,92,255,0.5);
+  }
+  .pcard-badge{
+    position:absolute;
+    top:-13px; right:28px;
+    background:linear-gradient(135deg,var(--amber),var(--amber-2));
+    color:#1A1100;
+    font-size:0.72rem;
+    font-weight:700;
+    padding:5px 14px;
+    border-radius:999px;
+    letter-spacing:0.03em;
+  }
+  .pcard .ptier{
+    font-size:0.85rem;
+    color:rgba(247,248,252,0.55);
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    margin-bottom:10px;
+  }
+  .pcard .pname{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:1.5rem;
+    font-weight:700;
+    margin-bottom:14px;
+  }
+  .pcard .pprice{
+    display:flex;
+    align-items:baseline;
+    gap:6px;
+    margin-bottom:6px;
+  }
+  .pcard .pprice .amt{
+    font-family:'JetBrains Mono',monospace;
+    font-size:2.3rem;
+    font-weight:600;
+  }
+  .pcard .pprice .per{color:rgba(247,248,252,0.5); font-size:0.88rem;}
+  .pcard .pdesc{
+    color:rgba(247,248,252,0.6);
+    font-size:0.88rem;
+    margin-bottom:24px;
+    padding-bottom:24px;
+    border-bottom:1px solid var(--line);
+  }
+  .pfeat{
+    display:flex;
+    flex-direction:column;
+    gap:13px;
+    margin-bottom:30px;
+    flex:1;
+  }
+  .pfeat li{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    font-size:0.9rem;
+    color:rgba(247,248,252,0.82);
+  }
+  .pfeat li svg{flex-shrink:0; margin-top:2px; color:var(--green);}
+
+  /* ============ FAQ / SALES CTA ============ */
+  .sales-bg{
+    background:var(--paper);
+    padding:0;
+  }
+  .sales-panel{
+    background:linear-gradient(135deg, var(--ink) 0%, #1A2A52 55%, #2A1F52 100%);
+    border-radius:32px;
+    padding:70px 60px;
+    color:var(--white);
+    display:grid;
+    grid-template-columns:1.2fr 0.8fr;
+    gap:40px;
+    align-items:center;
+    position:relative;
+    overflow:hidden;
+  }
+  .sales-panel::after{
+    content:'';
+    position:absolute;
+    bottom:-140px; left:30%;
+    width:480px;height:480px;
+    background:radial-gradient(circle, rgba(255,177,61,0.18), transparent 70%);
+  }
+  .sales-panel h2{
+    font-size:clamp(1.8rem,2.8vw,2.3rem);
+    margin-bottom:16px;
+    position:relative;z-index:2;
+  }
+  .sales-panel p{
+    color:rgba(247,248,252,0.7);
+    font-size:1.02rem;
+    line-height:1.65;
+    max-width:480px;
+    position:relative;z-index:2;
+  }
+  .sales-cta-box{
+    background:rgba(255,255,255,0.06);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:30px;
+    position:relative;z-index:2;
+  }
+  .sales-cta-box .lbl{
+    font-size:0.78rem;
+    color:rgba(247,248,252,0.55);
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    margin-bottom:10px;
+  }
+  .sales-cta-box .num{
+    font-family:'JetBrains Mono',monospace;
+    font-size:1.3rem;
+    color:var(--white);
+    margin-bottom:20px;
+  }
+
+  /* ============ FAQ ============ */
+  .faq-bg{background:var(--paper);}
+  .faq-list{max-width:760px; margin:0 auto;}
+  .faq-item{
+    border-bottom:1px solid #E7E9F2;
+    padding:22px 0;
+  }
+  .faq-q{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    cursor:pointer;
+    font-weight:600;
+    font-size:1.02rem;
+    color:var(--ink);
+  }
+  .faq-q .chev{transition:transform .25s; color:var(--slate);}
+  .faq-item.open .faq-q .chev{transform:rotate(180deg); color:var(--blue);}
+  .faq-a{
+    max-height:0;
+    overflow:hidden;
+    transition:max-height .3s ease;
+  }
+  .faq-item.open .faq-a{max-height:200px;}
+  .faq-a p{
+    color:var(--slate-dark);
+    font-size:0.94rem;
+    line-height:1.65;
+    padding-top:14px;
+    max-width:640px;
+  }
+
+  /* ============ FOOTER ============ */
+  footer{
+    background:var(--ink);
+    color:rgba(247,248,252,0.6);
+    padding:64px 0 30px;
+  }
+  .foot-grid{
+    display:grid;
+    grid-template-columns:1.4fr 1fr 1fr 1fr;
+    gap:40px;
+    padding-bottom:46px;
+    border-bottom:1px solid var(--line-soft);
+  }
+  .foot-brand .brand{color:var(--white); margin-bottom:14px;}
+  .foot-brand p{font-size:0.88rem; line-height:1.6; max-width:280px; color:rgba(247,248,252,0.5);}
+  .foot-col h5{
+    color:var(--white);
+    font-size:0.85rem;
+    margin-bottom:18px;
+    font-family:'Space Grotesk',sans-serif;
+  }
+  .foot-col ul{display:flex; flex-direction:column; gap:11px;}
+  .foot-col a{font-size:0.88rem; color:rgba(247,248,252,0.55); transition:color .2s;}
+  .foot-col a:hover{color:var(--white);}
+  .foot-bottom{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding-top:28px;
+    font-size:0.82rem;
+    color:rgba(247,248,252,0.4);
+    flex-wrap:wrap;
+    gap:14px;
+  }
+  .foot-social{display:flex; gap:14px;}
+  .foot-social a{
+    width:34px;height:34px;
+    border-radius:9px;
+    background:rgba(255,255,255,0.06);
+    display:flex;align-items:center;justify-content:center;
+    transition:background .2s;
+  }
+  .foot-social a:hover{background:rgba(255,255,255,0.14);}
+
+  /* ============ MOBILE ============ */
+  @media (max-width:980px){
+    .hero-inner{grid-template-columns:1fr; gap:50px;}
+    .feature-grid{grid-template-columns:1fr 1fr;}
+    .flow-grid{grid-template-columns:1fr 1fr; gap:34px;}
+    .client-grid{grid-template-columns:1fr 1fr;}
+    .pricing-grid{grid-template-columns:1fr; max-width:420px; margin:0 auto;}
+    .stats-grid{grid-template-columns:1fr 1fr; gap:34px;}
+    .sales-panel{grid-template-columns:1fr; padding:50px 32px; text-align:left;}
+    .foot-grid{grid-template-columns:1fr 1fr; gap:36px;}
+  }
+  @media (max-width:680px){
+    .nav-links{display:none;}
+    .nav-cta .btn-ghost{display:none;}
+    section{padding:78px 0;}
+    .hero{padding-top:120px;}
+    .feature-grid{grid-template-columns:1fr;}
+    .flow-grid{grid-template-columns:1fr;}
+    .client-grid{grid-template-columns:1fr;}
+    .stats-grid{grid-template-columns:1fr 1fr;}
+    .foot-grid{grid-template-columns:1fr 1fr;}
+    .logo-row{gap:28px;}
+    .sales-panel{border-radius:22px;}
+    .wrap{padding:0 20px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= NAV ================= -->
+<header>
+  <div class="wrap nav">
+    <a href="#top" class="brand">
+      <span class="brand-mark" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 3L2 8l10 5 10-5-10-5z" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/><path d="M6 12.5V18c0 .6 2.7 3 6 3s6-2.4 6-3v-5.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+      EduTrack
+    </a>
+    <nav class="nav-links">
+      <a href="#system">Platform</a>
+      <a href="#how">How it works</a>
+      <a href="#clients">Clients</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="nav-cta">
+      <a href="#pricing" class="btn btn-ghost" style="padding:11px 20px;font-size:0.88rem;">Sign in</a>
+      <a id="navWaBtn" href="#" class="btn btn-primary" style="padding:11px 22px;font-size:0.88rem;">Talk to sales</a>
+    </div>
+  </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<section class="hero" id="top">
+  <div class="hero-grid-bg" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="hero-inner">
+      <div>
+        <div class="eyebrow"><span class="dot"></span> Live across 30+ countries right now</div>
+        <h1>Run your school like it's <span class="grad">already global.</span></h1>
+        <p class="lede">EduTrack is the all-in-one school management system for admissions, fees, attendance, results and parent communication — built for institutions that operate across cities, states, and borders, from one dashboard.</p>
+        <div class="hero-ctas">
+          <a href="#" id="heroWaBtn" class="btn btn-primary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.89.53 3.66 1.45 5.17L2 22l5.09-1.55a9.8 9.8 0 0 0 4.94 1.33h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2zm0 1.67c2.23 0 4.32.87 5.9 2.45a8.23 8.23 0 0 1 2.43 5.79c0 4.55-3.7 8.25-8.33 8.25a8.3 8.3 0 0 1-4.22-1.15l-.3-.18-3.02.92.93-2.93-.2-.31a8.16 8.16 0 0 1-1.27-4.4c0-4.6 3.7-8.44 8.08-8.44z"/></svg>
+            Contact us on WhatsApp
+          </a>
+          <a href="#pricing" class="btn btn-ghost">See pricing</a>
+        </div>
+        <div class="trust-row">
+          <span><strong>1,200+</strong> schools onboarded</span>
+          <span><strong>2.1M+</strong> students tracked</span>
+          <span><strong>99.95%</strong> uptime SLA</span>
+        </div>
+      </div>
+
+      <div class="ops-panel">
+        <div class="ops-head">
+          <span class="ops-title mono">Global network status</span>
+          <span class="ops-live"><span class="pip"></span> LIVE</span>
+        </div>
+        <div class="globe-wrap">
+          <svg viewBox="0 0 400 230" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <defs>
+              <radialGradient id="glow" cx="50%" cy="45%" r="60%">
+                <stop offset="0%" stop-color="#3D5AFE" stop-opacity="0.25"/>
+                <stop offset="100%" stop-color="#3D5AFE" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+            <ellipse cx="200" cy="115" rx="150" ry="95" fill="url(#glow)"/>
+            <g stroke="#3D5AFE" stroke-opacity="0.35" fill="none" stroke-width="1">
+              <ellipse cx="200" cy="115" rx="150" ry="95"/>
+              <ellipse cx="200" cy="115" rx="150" ry="50"/>
+              <ellipse cx="200" cy="115" rx="105" ry="95"/>
+              <ellipse cx="200" cy="115" rx="55" ry="95"/>
+              <line x1="50" y1="115" x2="350" y2="115"/>
+            </g>
+            <g>
+              <circle cx="92" cy="78" r="3.5" fill="#FFB13D"><animate attributeName="opacity" values="1;0.3;1" dur="2.4s" repeatCount="indefinite"/></circle>
+              <circle cx="232" cy="60" r="3.5" fill="#2BD9A0"><animate attributeName="opacity" values="0.4;1;0.4" dur="1.9s" repeatCount="indefinite"/></circle>
+              <circle cx="300" cy="120" r="3.5" fill="#FFB13D"><animate attributeName="opacity" values="1;0.4;1" dur="2.7s" repeatCount="indefinite"/></circle>
+              <circle cx="150" cy="150" r="3.5" fill="#2BD9A0"><animate attributeName="opacity" values="0.5;1;0.5" dur="2.1s" repeatCount="indefinite"/></circle>
+              <circle cx="255" cy="165" r="3.5" fill="#FFB13D"><animate attributeName="opacity" values="1;0.3;1" dur="2.3s" repeatCount="indefinite"/></circle>
+              <circle cx="120" cy="115" r="3.5" fill="#2BD9A0"><animate attributeName="opacity" values="0.4;1;0.4" dur="2.6s" repeatCount="indefinite"/></circle>
+              <path d="M92,78 Q190,30 232,60" stroke="#FFB13D" stroke-opacity="0.4" fill="none" stroke-width="1"/>
+              <path d="M232,60 Q270,90 300,120" stroke="#2BD9A0" stroke-opacity="0.4" fill="none" stroke-width="1"/>
+              <path d="M150,150 Q200,190 255,165" stroke="#FFB13D" stroke-opacity="0.4" fill="none" stroke-width="1"/>
+              <path d="M120,115 Q140,130 150,150" stroke="#2BD9A0" stroke-opacity="0.4" fill="none" stroke-width="1"/>
+            </g>
+          </svg>
+        </div>
+        <div class="ops-stats">
+          <div class="ops-stat"><div class="num">1,204</div><div class="lab">Schools live</div></div>
+          <div class="ops-stat"><div class="num">38</div><div class="lab">Countries</div></div>
+          <div class="ops-stat"><div class="num">99.95%</div><div class="lab">Uptime</div></div>
+        </div>
+        <div class="ops-ticker">
+          <div class="ops-ticker-track mono">
+            <span>✓ Fee payment confirmed — Lagos, NG</span>
+            <span class="amber-tick">↻ Term results published — Nairobi, KE</span>
+            <span>✓ New enrolment — Accra, GH</span>
+            <span class="amber-tick">↻ Report cards generated — London, UK</span>
+            <span>✓ Fee payment confirmed — Lagos, NG</span>
+            <span class="amber-tick">↻ Term results published — Nairobi, KE</span>
+            <span>✓ New enrolment — Accra, GH</span>
+            <span class="amber-tick">↻ Report cards generated — London, UK</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= LOGO STRIP ================= -->
+<div class="strip">
+  <div class="wrap">
+    <div class="strip-label">Powering school groups and institutions worldwide</div>
+    <div class="logo-row">
+      <span class="lg"><span class="flag">🇳🇬</span> Lagos Crest Schools</span>
+      <span class="lg"><span class="flag">🇬🇭</span> Accra Heritage College</span>
+      <span class="lg"><span class="flag">🇰🇪</span> Nairobi Greenfield</span>
+      <span class="lg"><span class="flag">🇬🇧</span> Thames Valley Academy</span>
+      <span class="lg"><span class="flag">🇦🇪</span> Dubai Horizon School</span>
+      <span class="lg"><span class="flag">🇨🇦</span> Maple Ridge Schools</span>
+    </div>
+  </div>
+</div>
+
+<!-- ================= PLATFORM / FEATURES ================= -->
+<section class="features-bg" id="system">
+  <div class="wrap">
+    <div class="section-head center">
+      <div class="tag">⚙ The platform</div>
+      <h2>Every part of school operations, in one system.</h2>
+      <p>Admissions to alumni. Fees to final results. EduTrack replaces the spreadsheets, paper ledgers, and disconnected apps with one connected, real‑time system your whole school runs on.</p>
+    </div>
+    <div class="feature-grid">
+
+      <div class="fcard">
+        <div class="ico ico-blue"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 12l9-7 9 7-9 7-9-7z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M7 13.5V18c0 1.1 2.2 3 5 3s5-1.9 5-3v-4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+        <h3>Admin command center</h3>
+        <p>Manage students, staff, classes, and timetables from a single dashboard built for principals and registrars who need answers fast.</p>
+      </div>
+
+      <div class="fcard">
+        <div class="ico ico-amber"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+        <h3>Fees & payments</h3>
+        <p>Generate invoices, track instalments, and reconcile payments automatically. Parents pay online; your bursar stops chasing bank tellers.</p>
+      </div>
+
+      <div class="fcard">
+        <div class="ico ico-green"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M9 11l3 3L22 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+        <h3>Results & report cards</h3>
+        <p>Teachers input scores once. EduTrack computes grades, ranks, and generates print‑ready report cards in every term, instantly.</p>
+      </div>
+
+      <div class="fcard">
+        <div class="ico ico-blue"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="17" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M3 9h18M8 2v4M16 2v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+        <h3>Attendance & timetables</h3>
+        <p>Daily attendance, automated absence alerts to parents, and timetable scheduling that adapts as classes and staff change.</p>
+      </div>
+
+      <div class="fcard">
+        <div class="ico ico-amber"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M21 11.5a8.5 8.5 0 1 1-4-7.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M21 4l-9 9-4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Parent & student portals</h3>
+        <p>Parents see results, attendance, and fee history in real time. Students log in for assignments and announcements — no app installs.</p>
+      </div>
+
+      <div class="fcard">
+        <div class="ico ico-green"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M2 12h6l2-3 4 6 2-3h6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Insights & reporting</h3>
+        <p>Enrollment trends, revenue forecasts, and academic performance dashboards that give school owners boardroom‑ready numbers.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ================= HOW IT WORKS ================= -->
+<section class="flow-bg" id="how">
+  <div class="wrap" style="position:relative;z-index:2;">
+    <div class="section-head">
+      <div class="tag" style="color:var(--amber); background:rgba(255,177,61,0.1); border-color:rgba(255,177,61,0.25);">⏱ Time to launch</div>
+      <h2>From paperwork to platform in four steps.</h2>
+      <p style="color:rgba(247,248,252,0.6);">Most schools go fully live within two weeks — including historical data migration.</p>
+    </div>
+    <div class="flow-grid">
+      <div class="flow-step">
+        <div class="flow-num">01 <span class="ln"></span></div>
+        <h4>Tell us your structure</h4>
+        <p>Classes, terms, fee categories, and staff roles — mapped to your school's actual setup, not a generic template.</p>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">02 <span class="ln"></span></div>
+        <h4>We migrate your records</h4>
+        <p>Existing student, staff, and fee data is imported and verified by our onboarding team — your history travels with you.</p>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">03 <span class="ln"></span></div>
+        <h4>Train your staff</h4>
+        <p>Live walkthroughs for admins, teachers, and bursars. Most staff are confident within a single session.</p>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">04 <span class="ln"></span></div>
+        <h4>Go live, globally ready</h4>
+        <p>Parents get portal access, fees start processing online, and your dashboard starts reporting in real time.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= STATS BAND ================= -->
+<div class="stats-band">
+  <div class="wrap">
+    <div class="stats-grid">
+      <div class="stat-item"><div class="n">1,200+</div><div class="l">Schools on EduTrack</div></div>
+      <div class="stat-item"><div class="n">38</div><div class="l">Countries served</div></div>
+      <div class="stat-item"><div class="n">2.1M+</div><div class="l">Students tracked</div></div>
+      <div class="stat-item"><div class="n">$48M+</div><div class="l">Fees processed yearly</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= CLIENTS ================= -->
+<section class="clients-bg" id="clients">
+  <div class="wrap">
+    <div class="section-head center">
+      <div class="tag">🌍 Trusted globally</div>
+      <h2>School leaders run their institutions on EduTrack.</h2>
+      <p>From single campuses to multi‑branch school groups spanning continents, here's what changed after switching.</p>
+    </div>
+
+    <div class="client-grid">
+      <div class="ccard">
+        <div class="stars">★★★★★</div>
+        <p class="quote">We run four campuses across two countries. EduTrack is the only reason our head office can see live enrollment and fee numbers without calling every branch every morning.</p>
+        <div class="who">
+          <div class="avatar" style="background:linear-gradient(135deg,#3D5AFE,#7C5CFF);">AO</div>
+          <div><div class="who-name">Adaeze Okonkwo</div><div class="who-role">Group Director, Lagos Crest Schools — Nigeria</div></div>
+        </div>
+      </div>
+
+      <div class="ccard">
+        <div class="stars">★★★★★</div>
+        <p class="quote">Report card season used to take our teachers two full weeks. With EduTrack it's two days, and parents see results the moment they're approved.</p>
+        <div class="who">
+          <div class="avatar" style="background:linear-gradient(135deg,#FFB13D,#FF8A3D);">KM</div>
+          <div><div class="who-name">Kwame Mensah</div><div class="who-role">Principal, Accra Heritage College — Ghana</div></div>
+        </div>
+      </div>
+
+      <div class="ccard">
+        <div class="stars">★★★★★</div>
+        <p class="quote">Switching from manual fee ledgers to EduTrack's payment tracking cut our outstanding balances by a third in one term. Parents simply pay online now.</p>
+        <div class="who">
+          <div class="avatar" style="background:linear-gradient(135deg,#2BD9A0,#1A9E78);">NW</div>
+          <div><div class="who-name">Naomi Wachira</div><div class="who-role">Finance Lead, Nairobi Greenfield — Kenya</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="map-row">
+      <div class="map-pill">
+        <span class="country">🇳🇬 Nigeria</span>
+        <span class="country">🇬🇭 Ghana</span>
+        <span class="country">🇰🇪 Kenya</span>
+        <span class="country">🇬🇧 United Kingdom</span>
+        <span class="country">🇦🇪 UAE</span>
+        <span class="country">🇨🇦 Canada</span>
+        <span class="country">🇿🇦 South Africa</span>
+        <span class="country">+ 31 more</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PRICING ================= -->
+<section class="pricing-bg" id="pricing">
+  <div class="wrap">
+    <div class="section-head center">
+      <div class="tag" style="color:var(--amber); background:rgba(255,177,61,0.1); border-color:rgba(255,177,61,0.25);">💳 Pricing</div>
+      <h2 style="color:var(--white);">Simple pricing, built to scale with your school.</h2>
+      <p style="color:rgba(247,248,252,0.6);">Start with one campus or roll out across a whole group. No hidden fees, no per‑parent charges.</p>
+    </div>
+
+    <div class="billing-toggle">
+      <span class="toggle-label active" id="lblMonthly">Monthly</span>
+      <div class="toggle-track" id="billToggle" role="switch" aria-checked="false" tabindex="0" aria-label="Toggle annual billing">
+        <div class="toggle-knob"></div>
+      </div>
+      <span class="toggle-label" id="lblAnnual">Annual <span class="save-chip">Save 20%</span></span>
+    </div>
+
+    <div class="pricing-grid">
+
+      <div class="pcard">
+        <div class="ptier mono">Campus</div>
+        <div class="pname">Starter</div>
+        <div class="pprice"><span class="amt" data-monthly="₦45,000" data-annual="₦36,000">₦45,000</span><span class="per">/ month</span></div>
+        <div class="pdesc">For a single school of up to 400 students getting off paper for the first time.</div>
+        <ul class="pfeat">
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Up to 400 students</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Admin + teacher portals</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Fees & result cards</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Email support</li>
+        </ul>
+        <a href="#" class="btn btn-ghost btn-block wa-trigger">Get started</a>
+      </div>
+
+      <div class="pcard feat">
+        <div class="pcard-badge">Most popular</div>
+        <div class="ptier mono">Campus group</div>
+        <div class="pname">Growth</div>
+        <div class="pprice"><span class="amt" data-monthly="₦120,000" data-annual="₦96,000">₦120,000</span><span class="per">/ month</span></div>
+        <div class="pdesc">For schools or small groups up to 2,000 students needing full automation.</div>
+        <ul class="pfeat">
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Up to 2,000 students</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Parent portal + online payments</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Multi‑branch dashboard</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Priority WhatsApp support</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Free data migration</li>
+        </ul>
+        <a href="#" class="btn btn-primary btn-block wa-trigger">Get started</a>
+      </div>
+
+      <div class="pcard">
+        <div class="ptier mono">School group</div>
+        <div class="pname">Global</div>
+        <div class="pprice"><span class="amt">Custom</span></div>
+        <div class="pdesc">For multi‑country school groups with custom reporting, SSO, and dedicated infrastructure.</div>
+        <ul class="pfeat">
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Unlimited students & branches</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Dedicated account manager</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Custom integrations & SSO</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> 99.95% uptime SLA</li>
+        </ul>
+        <a href="#" class="btn btn-ghost btn-block wa-trigger">Talk to sales</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ================= SALES CTA ================= -->
+<section class="sales-bg">
+  <div class="wrap">
+    <div class="sales-panel">
+      <div>
+        <h2>Bringing on a whole school group? Let's talk directly.</h2>
+        <p>Our sales team handles multi‑branch rollouts, custom data migration, and pricing for groups of 5+ schools. Message us on WhatsApp and get a real reply — not a ticket number.</p>
+      </div>
+      <div class="sales-cta-box">
+        <div class="lbl">Sales & onboarding</div>
+        <div class="num">+234 816 551 9321</div>
+        <a href="#" class="btn btn-primary btn-block wa-trigger">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.89.53 3.66 1.45 5.17L2 22l5.09-1.55a9.8 9.8 0 0 0 4.94 1.33h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2zm0 1.67c2.23 0 4.32.87 5.9 2.45a8.23 8.23 0 0 1 2.43 5.79c0 4.55-3.7 8.25-8.33 8.25a8.3 8.3 0 0 1-4.22-1.15l-.3-.18-3.02.92.93-2.93-.2-.31a8.16 8.16 0 0 1-1.27-4.4c0-4.6 3.7-8.44 8.08-8.44z"/></svg>
+          Chat with sales now
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FAQ ================= -->
+<section class="faq-bg" id="faq">
+  <div class="wrap">
+    <div class="section-head center">
+      <div class="tag">❓ Questions</div>
+      <h2>Frequently asked questions</h2>
+    </div>
+    <div class="faq-list">
+
+      <div class="faq-item open">
+        <div class="faq-q">Can EduTrack handle a school group across multiple countries? <span class="chev">▾</span></div>
+        <div class="faq-a"><p>Yes. EduTrack supports multi‑branch, multi‑currency, and multi‑timezone operation out of the box — school groups in 38 countries already run their full network from one dashboard.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">How long does setup and data migration take? <span class="chev">▾</span></div>
+        <div class="faq-a"><p>Most single‑campus schools are fully live within two weeks, including migrating existing student, staff, and fee records from spreadsheets or paper.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">Do parents need to download an app? <span class="chev">▾</span></div>
+        <div class="faq-a"><p>No. Parents access the parent portal from any browser on any device — results, attendance, and fee payment included, no app store required.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">Can I talk to a real person before signing up? <span class="chev">▾</span></div>
+        <div class="faq-a"><p>Absolutely. Tap "Contact us on WhatsApp" anywhere on this page and our sales team will respond directly — no forms, no waiting on hold.</p></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 3L2 8l10 5 10-5-10-5z" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/><path d="M6 12.5V18c0 .6 2.7 3 6 3s6-2.4 6-3v-5.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          EduTrack
+        </div>
+        <p>The global school management system for admissions, fees, results, and communication — trusted across 38 countries.</p>
+      </div>
+      <div class="foot-col">
+        <h5>Platform</h5>
+        <ul>
+          <li><a href="#system">Admin dashboard</a></li>
+          <li><a href="#system">Parent portal</a></li>
+          <li><a href="#system">Fees & payments</a></li>
+          <li><a href="#system">Results & reports</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h5>Company</h5>
+        <ul>
+          <li><a href="#clients">Clients</a></li>
+          <li><a href="#how">How it works</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h5>Get in touch</h5>
+        <ul>
+          <li><a href="#" class="wa-trigger">WhatsApp sales</a></li>
+          <li><a href="#" class="wa-trigger">+234 816 551 9321</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 EduTrack Systems. All rights reserved.</span>
+      <div class="foot-social">
+        <a href="#" aria-label="WhatsApp" class="wa-trigger"><svg width="16" height="16" viewBox="0 0 24 24" fill="#F7F8FC"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.89.53 3.66 1.45 5.17L2 22l5.09-1.55a9.8 9.8 0 0 0 4.94 1.33h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2z"/></svg></a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ================= WHATSAPP FLOAT ================= -->
+<a href="#" id="floatWaBtn" class="wa-float" aria-label="Chat with us on WhatsApp">
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="#fff"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.89.53 3.66 1.45 5.17L2 22l5.09-1.55a9.8 9.8 0 0 0 4.94 1.33h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2zm0 1.67c2.23 0 4.32.87 5.9 2.45a8.23 8.23 0 0 1 2.43 5.79c0 4.55-3.7 8.25-8.33 8.25a8.3 8.3 0 0 1-4.22-1.15l-.3-.18-3.02.92.93-2.93-.2-.31a8.16 8.16 0 0 1-1.27-4.4c0-4.6 3.7-8.44 8.08-8.44z"/></svg>
+</a>
+
+<script>
+  // WhatsApp links — single source of truth for the number + message
+  const WA_NUMBER = "2348165519321";
+  const WA_MESSAGE = "Hello EduTrack, I'd like to know more about your school management system.";
+  const waUrl = "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(WA_MESSAGE);
+
+  document.querySelectorAll('.wa-trigger, #navWaBtn, #heroWaBtn, #floatWaBtn').forEach(el => {
+    el.setAttribute('href', waUrl);
+    el.setAttribute('target', '_blank');
+    el.setAttribute('rel', 'noopener noreferrer');
+  });
+
+  // FAQ accordion
+  document.querySelectorAll('.faq-item').forEach(item => {
+    item.querySelector('.faq-q').addEventListener('click', () => {
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    });
+  });
+
+  // Pricing billing toggle
+  const toggle = document.getElementById('billToggle');
+  const lblMonthly = document.getElementById('lblMonthly');
+  const lblAnnual = document.getElementById('lblAnnual');
+  let annual = false;
+
+  function applyBilling(){
+    document.querySelectorAll('.pcard .amt[data-monthly]').forEach(el => {
+      el.textContent = annual ? el.getAttribute('data-annual') : el.getAttribute('data-monthly');
+    });
+    toggle.classList.toggle('on', annual);
+    toggle.setAttribute('aria-checked', annual);
+    lblMonthly.classList.toggle('active', !annual);
+    lblAnnual.classList.toggle('active', annual);
+  }
+
+  toggle.addEventListener('click', () => { annual = !annual; applyBilling(); });
+  toggle.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); annual = !annual; applyBilling(); }
+  });
+
+  // Header background intensifies on scroll
+  const header = document.querySelector('header');
+  window.addEventListener('scroll', () => {
+    if(window.scrollY > 30){
+      header.style.background = 'rgba(11,18,32,0.92)';
+    } else {
+      header.style.background = 'rgba(11,18,32,0.7)';
+    }
+  });
+</script>
+
+</body>
+</html>
